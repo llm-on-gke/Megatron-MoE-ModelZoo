@@ -30,8 +30,9 @@ chmod +x /home/Megatron-LM/pretrain_gpt.py
 #--recompute-granularity selective \
 #--recompute-modules mla_up_proj moe mlp layernorm \
 #--fp8-recipe blockwise, GEMM does not support B200 
-
-NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_THREADS=8 PYTHON_PATH=/home/Megatron-LM TORCH_NCCL_ENABLE_MONITORING=0 DEEPEP_COMM_TIMEOUT_MS=30000 torchrun \
+export NVSHMEM_DEBUG=TRACE
+export NVSHMEM_DEBUG_FILE=/gcs-dir/megatron-logs/nvshmem_trace.log.%h.%p
+PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_THREADS=8 PYTHON_PATH=/home/Megatron-LM TORCH_NCCL_ENABLE_MONITORING=0 DEEPEP_COMM_TIMEOUT_MS=30000 torchrun \
         --nproc_per_node 8 \
         --nnodes $NNODES \
         --node_rank $NODE_RANK \
