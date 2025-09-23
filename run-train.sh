@@ -51,7 +51,7 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --use-flash-attn  \
         --disable-bias-linear  \
         --micro-batch-size 1 \
-        --global-batch-size 2048 \
+        --global-batch-size 1024 \
         --train-samples 655280 \
         --no-save-optim  \
         --no-check-for-nan-in-loss-and-grad  \
