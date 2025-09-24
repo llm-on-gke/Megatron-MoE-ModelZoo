@@ -26,6 +26,9 @@ chmod +x /home/Megatron-LM/pretrain_gpt.py
 #--recompute-granularity selective \
 #--recompute-modules mla_up_proj moe mlp layernorm \
 #--fp8-recipe blockwise, GEMM does not support B200 
+#--moe-router-padding-for-fp8 \
+#--fp8-recipe $FP8_RECIPE \
+#--fp8-format e4m3 \
 TP=1
 PP=16
 EP=8
@@ -151,6 +154,5 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --main-params-dtype fp32 \
         --exp-avg-dtype bf16 \
         --exp-avg-sq-dtype bf16 \
-        --moe-router-padding-for-fp8 \
         --overlap-grad-reduce \
         --overlap-param-gather
