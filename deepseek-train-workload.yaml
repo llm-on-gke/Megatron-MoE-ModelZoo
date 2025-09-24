@@ -3,7 +3,7 @@
 apiVersion: jobset.x-k8s.io/v1alpha2
 kind: JobSet
 metadata:
-  name: pytorch
+  name: rickchen
   annotations:
    kueue.x-k8s.io/queue-name: a4
 spec:
@@ -55,7 +55,7 @@ spec:
                 driver: gcsfuse.csi.storage.gke.io
                 readOnly: false
                 volumeAttributes:
-                   bucketName: rick-nemo-factory
+                   bucketName: rick-benchark
                    mountOptions: "implicit-dirs"
                    fileCacheCapacity: "-1Mi"
                    fileCacheForRangeRead: "true"
@@ -83,7 +83,7 @@ spec:
 
             containers:
             - name: pytorch
-              image: us-east1-docker.pkg.dev/supercomputer-testing/gke-llm/megatron-b200
+              image: us-east1-docker.pkg.dev/samskillman-hpc-benchmarks/gke-llm/megatron-b200
               imagePullPolicy: Always
               # image: gcr.io/k8s-staging-jobset/pytorch-mnist:latest
               ports:
@@ -100,7 +100,7 @@ spec:
                      name: huggingface
                      key: HF_TOKEN
               - name: MASTER_ADDR
-                value: "pytorch-workers-0-0.pytorch.default.svc.cluster.local"
+                value: "rickchen-workers-0-0.rickchen.default.svc.cluster.local"
               - name: MASTER_PORT
                 value: "3389"
               - name: NNODES
