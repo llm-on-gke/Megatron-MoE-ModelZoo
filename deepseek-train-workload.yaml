@@ -55,7 +55,7 @@ spec:
                 driver: gcsfuse.csi.storage.gke.io
                 readOnly: false
                 volumeAttributes:
-                   bucketName: rick-benchark
+                   bucketName: rick-benchmark
                    mountOptions: "implicit-dirs"
                    fileCacheCapacity: "-1Mi"
                    fileCacheForRangeRead: "true"
