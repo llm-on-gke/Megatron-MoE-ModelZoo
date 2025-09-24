@@ -146,7 +146,7 @@ spec:
                 cd /home
                 rm -r -f Megatron-MoE-ModelZoo
                 #pip install megatron-core[lts] yq
-                git clone https://github.com/llm-on-gke/Megatron-LM/
+                git clone https://github.com/Nvidia/Megatron-LM/
                 cd /home/Megatron-LM
                 #git checkout costa/benchmark
                 pip install -e .
