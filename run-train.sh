@@ -146,7 +146,7 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --recompute-granularity selective \
         --recompute-modules mla_up_proj moe mlp layernorm \
         --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL" \
-        --fp8-recipe blockwise \
+        --fp8-recipe ${FP8_RECIPE} \
         --fp8-format e4m3 \
         --use-precision-aware-optimizer \
         --main-grads-dtype fp32 \
