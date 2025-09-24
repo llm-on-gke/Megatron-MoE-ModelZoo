@@ -22,7 +22,7 @@ export DEEPEP_COMM_TIMEOUT_MS=30000
 chmod +x /home/Megatron-LM/pretrain_gpt.py
 
 #--moe-shared-expert-overlap \
-# --moe-token-dispatcher-type alltoall \
+#--moe-token-dispatcher-type alltoall \
 #--recompute-granularity selective \
 #--recompute-modules mla_up_proj moe mlp layernorm \
 #--fp8-recipe blockwise, GEMM does not support B200 
@@ -32,7 +32,7 @@ EP=8
 CP=1
 MBS=1
 GBS=256
-SEQ_LEN=2048
+SEQ_LEN=4096
 OUTPUT_PATH="/home/Megatron-MoE-ModelZoo/output/"
 WORKSPACE="/home/Megatron-MoE-ModelZoo"
 
@@ -47,35 +47,31 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --distributed-timeout-minutes 60 \
         --tensor-model-parallel-size ${TP} \
         --pipeline-model-parallel-size ${PP} \
-        --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL" \
         --expert-model-parallel-size ${EP} \
         --context-parallel-size ${CP} \
         --expert-tensor-parallel-size 1 \
-        --use-distributed-optimizer \
-        --overlap-grad-reduce \
-        --overlap-param-gather \
-        --use-mcore-models \
-        --sequence-parallel \
-        --use-flash-attn \
-        --disable-bias-linear \
+        --use-distributed-optimizer  \
+        --use-mcore-models  \
+        --sequence-parallel  \
+        --use-flash-attn  \
+        --disable-bias-linear  \
         --micro-batch-size ${MBS} \
         --global-batch-size ${GBS} \
-        --train-samples 585937 \
-        --exit-duration-in-mins 220 \
-        --no-save-optim \
-        --no-check-for-nan-in-loss-and-grad \
-        --cross-entropy-loss-fusion \
+        --train-samples 6552800 \
+        --no-save-optim  \
+        --no-check-for-nan-in-loss-and-grad  \
+        --cross-entropy-loss-fusion  \
         --cross-entropy-fusion-impl te \
-        --manual-gc \
+        --manual-gc  \
         --manual-gc-interval 10 \
         --transformer-impl transformer_engine \
         --seq-length ${SEQ_LEN} \
         --tokenizer-type HuggingFaceTokenizer \
         --tokenizer-model deepseek-ai/DeepSeek-V3 \
-        --mock-data \
+        --mock-data  \
         --split 99,1,0 \
-        --no-mmap-bin-files \
-        --no-create-attention-mask-in-dataloader \
+        --no-mmap-bin-files  \
+        --no-create-attention-mask-in-dataloader  \
         --num-workers 6 \
         --num-layers 61 \
         --hidden-size 7168 \
@@ -88,9 +84,9 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --make-vocab-size-divisible-by 3232 \
         --normalization RMSNorm \
         --norm-epsilon 1e-6 \
-        --swiglu \
-        --untie-embeddings-and-output-weights \
-        --multi-latent-attention \
+        --swiglu  \
+        --untie-embeddings-and-output-weights  \
+        --multi-latent-attention  \
         --attention-dropout 0.0 \
         --hidden-dropout 0.0 \
         --clip-grad 1.0 \
@@ -99,20 +95,20 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --lr-decay-samples 584765624 \
         --lr-warmup-samples 1536000 \
         --lr-warmup-init 3.9e-7 \
-        --lr 3.9e-6 \
+        --lr 3.9e-7 \
         --min-lr 3.9e-7 \
         --lr-decay-style cosine \
         --adam-beta1 0.9 \
         --adam-beta2 0.95 \
         --num-experts 8 \
+        --moe-layer-freq "([0]*3+[1]*58)" \
         --moe-ffn-hidden-size 2048 \
         --moe-shared-expert-intermediate-size 2048 \
         --moe-router-load-balancing-type seq_aux_loss \
-        --moe-router-topk 2 \
+        --moe-router-topk 8 \
         --moe-token-dispatcher-type flex \
-        --moe-enable-deepep \
-        --moe-router-pre-softmax \
-        --moe-layer-freq "([0]*3+[1]*58)" \
+        --moe-enable-deepep  \
+        --moe-router-pre-softmax  \
         --moe-aux-loss-coeff 1e-4 \
         --moe-router-group-topk 4 \
         --moe-router-num-groups 8 \
@@ -121,8 +117,7 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --moe-router-enable-expert-bias  \
         --moe-router-bias-update-rate 1e-3 \
         --moe-router-dtype fp32 \
-        --moe-permute-fusion \
-        --moe-router-fusion\
+        --moe-permute-fusion  \
         --q-lora-rank 1536 \
         --kv-lora-rank 512 \
         --qk-head-dim 128 \
@@ -134,17 +129,30 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --mtp-num-layers 1 \
         --mtp-loss-scaling-factor 0.1 \
         --eval-iters 32 \
-        --eval-interval 200 \
-        --no-load-optim \
-        --no-load-rng \
-        --auto-detect-ckpt-format \
-        --save ${OUTPUT_PATH}/checkpoints \
-        --save-interval 500 \
+        --eval-interval 10000000 \
+        --no-load-optim  \
+        --no-load-rng  \
+        --auto-detect-ckpt-format  \
+        --save ${OUTPUT_PATH}/Megatron-MoE-ModelZoo-workspace/Megatron-MoE-ModelZoo/output/mcore-benchmarking-vyour_own_megatron_version/DeepSeek-V3-TP1PP8EP32VPP4CP1-MBS1GBS8192/checkpoints \
+        --save-interval 10000000 \
         --dist-ckpt-strictness log_all \
         --init-method-std 0.02 \
-        --log-throughput \
+        --log-throughput  \
         --log-interval 1 \
         --logging-level 40 \
-        --tensorboard-dir ${OUTPUT_PATH}/tensorboard \
+        --tensorboard-dir ${OUTPUT_PATH}/Megatron-MoE-ModelZoo-workspace/Megatron-MoE-ModelZoo/output/mcore-benchmarking-vyour_own_megatron_version/DeepSeek-V3-TP1PP8EP32VPP4CP1-MBS1GBS8192/tensorboard \
         --bf16  \
-        --enable-experimental
+        --enable-experimental   \
+        --recompute-granularity selective \
+        --recompute-modules mla_up_proj moe mlp layernorm \
+        --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL" \
+        --fp8-recipe blockwise \
+        --fp8-format e4m3 \
+        --use-precision-aware-optimizer \
+        --main-grads-dtype fp32 \
+        --main-params-dtype fp32 \
+        --exp-avg-dtype bf16 \
+        --exp-avg-sq-dtype bf16 \
+        --moe-router-padding-for-fp8 \
+        --overlap-grad-reduce \
+        --overlap-param-gather

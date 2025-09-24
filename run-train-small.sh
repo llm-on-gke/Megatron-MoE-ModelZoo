@@ -1,4 +1,3 @@
-#!/bin/bash
 set -euxo pipefail
 
 source /usr/local/gib/scripts/set_nccl_env.sh
@@ -6,19 +5,16 @@ export NCCL_SOCKET_IFNAME="eth0,eth1"
 export NCCL_TUNER_CONFIG_PATH=/usr/local/gib/configs/tuner_config_a4.txtpb
 
 export TRITON_CACHE_DIR="/tmp/triton-cache/"
-#export NCCL_DEBUG=INFO
+#export 
 export NCCL_DEBUG_SUBSYS=ALL
-export CUDA_DEVICE_MAX_CONNECTIONS=32
-export NVTE_FWD_LAYERNORM_SM_MARGIN=20
-export NVTE_BWD_LAYERNORM_SM_MARGIN=20
 export TORCH_NCCL_AVOID_RECORD_STREAMS=0
 export NVTE_ALLOW_NONDETERMINISTIC_ALGO=1
-export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True"
 export NCCL_NVLS_ENABLE=0
 export NVTE_FUSED_ATTN=1
 export NVTE_NORM_FWD_USE_CUDNN=1
 export NVTE_NORM_BWD_USE_CUDNN=1
-export PYTHONWARNINGS=ignore
+export PYTHONWARNINGS="ignore"
 
 #add
 export DEEPEP_COMM_TIMEOUT_MS=30000 
@@ -30,74 +26,17 @@ chmod +x /home/Megatron-LM/pretrain_gpt.py
 #--recompute-granularity selective \
 #--recompute-modules mla_up_proj moe mlp layernorm \
 #--fp8-recipe blockwise, GEMM does not support B200 
+TP=1
+PP=16
+EP=8
+CP=1
+MBS=1
+GBS=256
+SEQ_LEN=2048
+OUTPUT_PATH="/home/Megatron-MoE-ModelZoo/output/"
+WORKSPACE="/home/Megatron-MoE-ModelZoo"
 
 NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_THREADS=8 PYTHON_PATH=/home/Megatron-LM TORCH_NCCL_ENABLE_MONITORING=0 DEEPEP_COMM_TIMEOUT_MS=30000 torchrun \
-   PYTORCH_CUDA_ALLOC_CONF="expandable_segments:False" OMP_NUM_THREADS=8 PYTHON_PATH=/home/Megatron-LM TORCH_NCCL_ENABLE_MONITORING=0 DEEPEP_COMM_TIMEOUT_MS=30000 torchrun \
-        --nproc_per_node 8 \
-        --nnodes $NNODES \
-        --node_rank $NODE_RANK \
-        --master_addr $MASTER_ADDR \
-        --rdzv_id="${JOB_IDENTIFIER}" \
-        --rdzv_backend static \
-        --master_port $MASTER_PORT /home/Megatron-LM/pretrain_gpt.py \
-        --distributed-timeout-minutes: 60 \
-        --tensor-model-parallel-size: ${TP} \
-        --pipeline-model-parallel-size: ${PP} \
-        --expert-model-parallel-size: ${EP} \
-        --context-parallel-size: ${CP} \
-        --expert-tensor-parallel-size: 1 \
-        --use-distributed-optimizer: true \
-        --overlap-grad-reduce: true \
-        --overlap-param-gather: true \
-        --use-mcore-models: true \
-        --sequence-parallel: true \
-        --use-flash-attn: true \
-        --disable-bias-linear: true \
-        --micro-batch-size: ${MBS} \
-        --global-batch-size: ${GBS} \
-        --train-samples: 585937500 \
-        --exit-duration-in-mins: 220 \
-        --no-save-optim: true \
-        --no-check-for-nan-in-loss-and-grad: true \
-        --cross-entropy-loss-fusion: true \
-        --cross-entropy-fusion-impl: te \
-        --manual-gc: true \
-        --manual-gc-interval: 10 \
-        --transformer-impl: transformer_engine \
-        --seq-length: ${SEQ_LEN} \
-        --data-cache-path: ${WORKSPACE}/data_cache \
-        --tokenizer-type: HuggingFaceTokenizer \
-        --tokenizer-model: deepseek-ai/DeepSeek-V3 \
-        --data-path: ${DATA_PATH} \
-        --mock-data: true \
-        --split: 99,1,0 \
-        --no-mmap-bin-files: true \
-        --no-create-attention-mask-in-dataloader: true \
-        --num-workers: 6 \
-        --num-layers: 61 \
-        --hidden-size: 7168 \
-        --ffn-hidden-size: 18432 \
-        --num-attention-heads: 128 \
-        --kv-channels: 128 \
-        --max-position-embeddings: 4096 \
-        --position-embedding-type: rope \
-        --rotary-base: 10000 \
-        --make-vocab-size-divisible-by: 3232 \
-        --normalization: RMSNorm \
-        --norm-epsilon: 1e-6 \
-        --swiglu: true \
-        --untie-embeddings-and-output-weights: true \
-        --multi-latent-attention: true \
-        --attention-dropout: 0.0 \
-        --hidden-dropout: 0.0 \
-        --clip-grad: 1.0 \
-        --weight-decay: 0.1 \
-        --qk-layernorm: true \
-        --lr-decay-samples: 584765624 \
-        --lr-warmup-samples: 1536000 \
-        --lr-warmup-init: 3.9e-7 \
-        --lr: 3.9e-6 \
-        --min-lr: 3.9e-7 \
         --nproc_per_node 8 \
         --nnodes $NNODES \
         --node_rank $NODE_RANK \
@@ -106,33 +45,37 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --rdzv_backend static \
         --master_port $MASTER_PORT /home/Megatron-LM/pretrain_gpt.py \
         --distributed-timeout-minutes 60 \
-        --tensor-model-parallel-size 1 \
-        --pipeline-model-parallel-size 4 \
-        --expert-model-parallel-size 4 \
-        --context-parallel-size 1 \
+        --tensor-model-parallel-size ${TP} \
+        --pipeline-model-parallel-size ${PP} \
+        --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL" \
+        --expert-model-parallel-size ${EP} \
+        --context-parallel-size ${CP} \
         --expert-tensor-parallel-size 1 \
-        --use-distributed-optimizer  \
-        --use-mcore-models  \
-        --sequence-parallel  \
-        --use-flash-attn  \
-        --disable-bias-linear  \
-        --micro-batch-size 1 \
-        --global-batch-size 128 \
-        --train-samples 655280 \
-        --no-save-optim  \
-        --no-check-for-nan-in-loss-and-grad  \
-        --cross-entropy-loss-fusion  \
+        --use-distributed-optimizer \
+        --overlap-grad-reduce \
+        --overlap-param-gather \
+        --use-mcore-models \
+        --sequence-parallel \
+        --use-flash-attn \
+        --disable-bias-linear \
+        --micro-batch-size ${MBS} \
+        --global-batch-size ${GBS} \
+        --train-samples 585937 \
+        --exit-duration-in-mins 220 \
+        --no-save-optim \
+        --no-check-for-nan-in-loss-and-grad \
+        --cross-entropy-loss-fusion \
         --cross-entropy-fusion-impl te \
-        --manual-gc  \
+        --manual-gc \
         --manual-gc-interval 10 \
         --transformer-impl transformer_engine \
-        --seq-length 512 \
+        --seq-length ${SEQ_LEN} \
         --tokenizer-type HuggingFaceTokenizer \
         --tokenizer-model deepseek-ai/DeepSeek-V3 \
-        --mock-data  \
+        --mock-data \
         --split 99,1,0 \
-        --no-mmap-bin-files  \
-        --no-create-attention-mask-in-dataloader  \
+        --no-mmap-bin-files \
+        --no-create-attention-mask-in-dataloader \
         --num-workers 6 \
         --num-layers 61 \
         --hidden-size 7168 \
@@ -145,9 +88,9 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --make-vocab-size-divisible-by 3232 \
         --normalization RMSNorm \
         --norm-epsilon 1e-6 \
-        --swiglu  \
-        --untie-embeddings-and-output-weights  \
-        --multi-latent-attention  \
+        --swiglu \
+        --untie-embeddings-and-output-weights \
+        --multi-latent-attention \
         --attention-dropout 0.0 \
         --hidden-dropout 0.0 \
         --clip-grad 1.0 \
@@ -156,29 +99,30 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --lr-decay-samples 584765624 \
         --lr-warmup-samples 1536000 \
         --lr-warmup-init 3.9e-7 \
-        --lr 3.9e-7 \
+        --lr 3.9e-6 \
         --min-lr 3.9e-7 \
         --lr-decay-style cosine \
         --adam-beta1 0.9 \
         --adam-beta2 0.95 \
         --num-experts 8 \
-        --moe-layer-freq "([0]*3+[1]*58)" \
         --moe-ffn-hidden-size 2048 \
         --moe-shared-expert-intermediate-size 2048 \
         --moe-router-load-balancing-type seq_aux_loss \
-        --moe-router-topk 8 \
+        --moe-router-topk 2 \
         --moe-token-dispatcher-type flex \
         --moe-enable-deepep \
-        --moe-router-pre-softmax  \
+        --moe-router-pre-softmax \
+        --moe-layer-freq "([0]*3+[1]*58)" \
         --moe-aux-loss-coeff 1e-4 \
-        --moe-router-group-topk 1 \
-        --moe-router-num-groups 1 \
+        --moe-router-group-topk 4 \
+        --moe-router-num-groups 8 \
         --moe-router-topk-scaling-factor 2.5 \
         --moe-router-score-function sigmoid \
         --moe-router-enable-expert-bias  \
         --moe-router-bias-update-rate 1e-3 \
         --moe-router-dtype fp32 \
-        --moe-permute-fusion  \
+        --moe-permute-fusion \
+        --moe-router-fusion\
         --q-lora-rank 1536 \
         --kv-lora-rank 512 \
         --qk-head-dim 128 \
@@ -190,30 +134,17 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --mtp-num-layers 1 \
         --mtp-loss-scaling-factor 0.1 \
         --eval-iters 32 \
-        --eval-interval 10000000 \
-        --no-load-optim  \
-        --no-load-rng  \
-        --auto-detect-ckpt-format  \
-        --save /gcs-dir/Megatron-MoE-ModelZoo/output/mcore-benchmarking-vyour_own_megatron_version/DeepSeek-V3-TP1PP8EP32VPP4CP1-MBS1GBS8192/checkpoints \
-        --save-interval 10000000 \
+        --eval-interval 200 \
+        --no-load-optim \
+        --no-load-rng \
+        --auto-detect-ckpt-format \
+        --save ${OUTPUT_PATH}/checkpoints \
+        --save-interval 500 \
         --dist-ckpt-strictness log_all \
         --init-method-std 0.02 \
-        --log-memory-to-tensorboard  \
-        --log-validation-ppl-to-tensorboard  \
-        --log-throughput  \
+        --log-throughput \
         --log-interval 1 \
         --logging-level 40 \
-        --tensorboard-dir /gcs-dir/Megatron-MoE-ModelZoo-workspace/Megatron-MoE-ModelZoo/output/mcore-benchmarking-vyour_own_megatron_version/DeepSeek-V3-TP1PP8EP32VPP4CP1-MBS1GBS8192/tensorboard \
+        --tensorboard-dir ${OUTPUT_PATH}/tensorboard \
         --bf16  \
-        --enable-experimental \
-        --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL" \
-        --fp8-recipe $FP8_RECIPE \
-        --fp8-format e4m3 \
-        --use-precision-aware-optimizer \
-        --main-grads-dtype bf16 \
-        --main-params-dtype fp16 \
-        --exp-avg-dtype bf16 \
-        --exp-avg-sq-dtype bf16 \
-        --moe-router-padding-for-fp8 \
-        --overlap-grad-reduce \
-        --overlap-param-gather
+        --enable-experimental
