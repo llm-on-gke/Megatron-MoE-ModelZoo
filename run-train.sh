@@ -33,7 +33,7 @@ CP=1
 MBS=1
 GBS=256
 SEQ_LEN=2048
-OUTPUT_PATH="/gcs-dir/Megatron-MoE-ModelZoo/output/"
+OUTPUT_PATH="/home/Megatron-MoE-ModelZoo/output/"
 WORKSPACE="/home/Megatron-MoE-ModelZoo"
 
 NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_THREADS=8 PYTHON_PATH=/home/Megatron-LM TORCH_NCCL_ENABLE_MONITORING=0 DEEPEP_COMM_TIMEOUT_MS=30000 torchrun \
@@ -142,9 +142,6 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --save-interval 500 \
         --dist-ckpt-strictness log_all \
         --init-method-std 0.02 \
-        --log-timers-to-tensorboard \
-        --log-memory-to-tensorboard \
-        --log-validation-ppl-to-tensorboard \
         --log-throughput \
         --log-interval 1 \
         --logging-level 40 \
