@@ -111,7 +111,7 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --moe-router-pre-softmax  \
         --moe-aux-loss-coeff 1e-4 \
         --moe-router-group-topk 4 \
-        --moe-router-num-groups 8 \
+        --moe-router-num-groups 1 \
         --moe-router-topk-scaling-factor 2.5 \
         --moe-router-score-function sigmoid \
         --moe-router-enable-expert-bias  \
