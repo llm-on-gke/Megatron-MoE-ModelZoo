@@ -35,7 +35,7 @@ EP=8
 CP=1
 MBS=1
 GBS=512
-SEQ_LEN=4096
+SEQ_LEN=2048
 OUTPUT_PATH="/home/Megatron-MoE-ModelZoo/output/"
 WORKSPACE="/home/Megatron-MoE-ModelZoo"
 
@@ -145,6 +145,9 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --logging-level 40 \
         --tensorboard-dir ${OUTPUT_PATH}/Megatron-MoE-ModelZoo-workspace/Megatron-MoE-ModelZoo/output/mcore-benchmarking-vyour_own_megatron_version/DeepSeek-V3-TP1PP8EP32VPP4CP1-MBS1GBS8192/tensorboard \
         --bf16  \
+        --moe-router-padding-for-fp8 \
+        --fp8-recipe $FP8_RECIPE \
+        --fp8-format e4m3 \
         --enable-experimental   \
         --recompute-granularity selective \
         --recompute-modules mla_up_proj moe mlp layernorm \
