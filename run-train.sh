@@ -31,7 +31,7 @@ PP=16
 EP=8
 CP=1
 MBS=1
-GBS=2048
+GBS=256
 SEQ_LEN=2048
 OUTPUT_PATH="/gcs-dir/Megatron-MoE-ModelZoo/output/"
 WORKSPACE="/home/Megatron-MoE-ModelZoo"
@@ -104,7 +104,7 @@ NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_TH
         --lr-decay-style cosine \
         --adam-beta1 0.9 \
         --adam-beta2 0.95 \
-        --num-experts 256 \
+        --num-experts 8 \
         --moe-ffn-hidden-size 2048 \
         --moe-shared-expert-intermediate-size 2048 \
         --moe-router-load-balancing-type seq_aux_loss \
