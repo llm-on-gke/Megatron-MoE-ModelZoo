@@ -29,9 +29,9 @@ chmod +x /home/Megatron-LM/pretrain_gpt.py
 #--moe-router-padding-for-fp8 \
 #--fp8-recipe $FP8_RECIPE \
 #--fp8-format e4m3 \
-TP=1
-PP=16
-EP=8
+TP=2
+PP=8
+EP=4
 CP=1
 MBS=1
 GBS=512
