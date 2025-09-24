@@ -42,6 +42,7 @@ PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_THREADS=8 PYTHON_PATH
         --distributed-timeout-minutes 60 \
         --tensor-model-parallel-size 2 \
         --pipeline-model-parallel-size 16 \
+        --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL" \
         --expert-model-parallel-size 8 \
         --context-parallel-size 1 \
         --expert-tensor-parallel-size 1 \

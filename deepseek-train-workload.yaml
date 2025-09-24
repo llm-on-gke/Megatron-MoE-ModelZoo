@@ -152,6 +152,11 @@ spec:
                 pip install -e .
                 #pip install megatron-core@git+https://github.com/NVIDIA/Megatron-LM.git@core_r0.13.0
                 export PYTHON_PATH=$PYTHON_PATH:/home/home/Megatron-LM
+                cd /home/dpsk_a2a/
+                rm -r -f deepep
+                git clone https://github.com/llm-on-gke/DeepEP.git ./deepep
+                cd deepep
+                NVSHMEM_DIR=/home/dpsk_a2a/deepep-nvshmem python setup.py install
                 cd /home
                 git clone https://github.com/llm-on-gke/Megatron-MoE-ModelZoo.git
                 cd Megatron-MoE-ModelZoo

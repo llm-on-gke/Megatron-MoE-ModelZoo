@@ -32,6 +32,72 @@ chmod +x /home/Megatron-LM/pretrain_gpt.py
 #--fp8-recipe blockwise, GEMM does not support B200 
 
 NVSHMEM_DEBUG=INFO PYTORCH_CUDA_ALLOC_CONF="expandable_segments:True" OMP_NUM_THREADS=8 PYTHON_PATH=/home/Megatron-LM TORCH_NCCL_ENABLE_MONITORING=0 DEEPEP_COMM_TIMEOUT_MS=30000 torchrun \
+   PYTORCH_CUDA_ALLOC_CONF="expandable_segments:False" OMP_NUM_THREADS=8 PYTHON_PATH=/home/Megatron-LM TORCH_NCCL_ENABLE_MONITORING=0 DEEPEP_COMM_TIMEOUT_MS=30000 torchrun \
+        --nproc_per_node 8 \
+        --nnodes $NNODES \
+        --node_rank $NODE_RANK \
+        --master_addr $MASTER_ADDR \
+        --rdzv_id="${JOB_IDENTIFIER}" \
+        --rdzv_backend static \
+        --master_port $MASTER_PORT /home/Megatron-LM/pretrain_gpt.py \
+        --distributed-timeout-minutes: 60 \
+        --tensor-model-parallel-size: ${TP} \
+        --pipeline-model-parallel-size: ${PP} \
+        --expert-model-parallel-size: ${EP} \
+        --context-parallel-size: ${CP} \
+        --expert-tensor-parallel-size: 1 \
+        --use-distributed-optimizer: true \
+        --overlap-grad-reduce: true \
+        --overlap-param-gather: true \
+        --use-mcore-models: true \
+        --sequence-parallel: true \
+        --use-flash-attn: true \
+        --disable-bias-linear: true \
+        --micro-batch-size: ${MBS} \
+        --global-batch-size: ${GBS} \
+        --train-samples: 585937500 \
+        --exit-duration-in-mins: 220 \
+        --no-save-optim: true \
+        --no-check-for-nan-in-loss-and-grad: true \
+        --cross-entropy-loss-fusion: true \
+        --cross-entropy-fusion-impl: te \
+        --manual-gc: true \
+        --manual-gc-interval: 10 \
+        --transformer-impl: transformer_engine \
+        --seq-length: ${SEQ_LEN} \
+        --data-cache-path: ${WORKSPACE}/data_cache \
+        --tokenizer-type: HuggingFaceTokenizer \
+        --tokenizer-model: deepseek-ai/DeepSeek-V3 \
+        --data-path: ${DATA_PATH} \
+        --mock-data: true \
+        --split: 99,1,0 \
+        --no-mmap-bin-files: true \
+        --no-create-attention-mask-in-dataloader: true \
+        --num-workers: 6 \
+        --num-layers: 61 \
+        --hidden-size: 7168 \
+        --ffn-hidden-size: 18432 \
+        --num-attention-heads: 128 \
+        --kv-channels: 128 \
+        --max-position-embeddings: 4096 \
+        --position-embedding-type: rope \
+        --rotary-base: 10000 \
+        --make-vocab-size-divisible-by: 3232 \
+        --normalization: RMSNorm \
+        --norm-epsilon: 1e-6 \
+        --swiglu: true \
+        --untie-embeddings-and-output-weights: true \
+        --multi-latent-attention: true \
+        --attention-dropout: 0.0 \
+        --hidden-dropout: 0.0 \
+        --clip-grad: 1.0 \
+        --weight-decay: 0.1 \
+        --qk-layernorm: true \
+        --lr-decay-samples: 584765624 \
+        --lr-warmup-samples: 1536000 \
+        --lr-warmup-init: 3.9e-7 \
+        --lr: 3.9e-6 \
+        --min-lr: 3.9e-7 \
         --nproc_per_node 8 \
         --nnodes $NNODES \
         --node_rank $NODE_RANK \
