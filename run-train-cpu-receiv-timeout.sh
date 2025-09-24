@@ -32,7 +32,7 @@ EP=8
 CP=1
 MBS=1
 GBS=512
-SEQ_LEN=4096
+SEQ_LEN=2048
 OUTPUT_PATH="/home/Megatron-MoE-ModelZoo/output/"
 WORKSPACE="/home/Megatron-MoE-ModelZoo"
 
