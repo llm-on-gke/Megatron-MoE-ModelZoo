@@ -42,5 +42,10 @@ ENV TORCH_CUDA_ARCH_LIST="10.0"
 RUN NVSHMEM_DIR=/home/dpsk_a2a/deepep-nvshmem python setup.py develop
 RUN NVSHMEM_DIR=/home/dpsk_a2a/deepep-nvshmem python setup.py install
 
+# Install TE
+ARG COMMIT=734bcedd9d86e4be30ce44f1ef67af5f69f3670d
+ARG TE="git+https://github.com/NVIDIA/TransformerEngine.git@$COMMIT"
+RUN unset PIP_CONSTRAINT && NVTE_CUDA_ARCHS="90;100" NVTE_BUILD_THREADS_PER_JOB=8 NVTE_FRAMEWORK=pytorch pip install --no-cache-dir --no-build-isolation $TE
+
 ## Change the workspace
 WORKDIR /home/
