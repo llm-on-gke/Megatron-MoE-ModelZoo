@@ -116,7 +116,7 @@ TRAINING_ARGS=(
 
     # Training args
     --sequence-parallel
-    --use-flash-attn
+    #--use-flash-attn
     --no-save-optim
     --no-check-for-nan-in-loss-and-grad
     --cross-entropy-loss-fusion
