@@ -25,7 +25,8 @@ spec:
               networking.gke.io/default-interface: 'eth0'
               networking.gke.io/interfaces: |
                [
-                {"interfaceName":"eth0","network":"default"},
+                  {"interfaceName":"eth0","network":"default"},
+                  {"interfaceName":"eth1","network":"gvnic-1"},
                   {"interfaceName":"eth2","network":"rdma-0"},
                   {"interfaceName":"eth3","network":"rdma-1"},
                   {"interfaceName":"eth4","network":"rdma-2"},
@@ -141,7 +142,7 @@ spec:
                 
                 ldconfig $LD_LIBRARY_PATH
                 #echo "Added $LD_LIBRARY_PATH to ldconfig:"
-                ldconfig -p | grep libcuda | sed 's/^/  /'
+                #ldconfig -p | grep libcuda | sed 's/^/  /'
                 echo ""
                 cd /home
                 rm -r -f Megatron-MoE-ModelZoo
