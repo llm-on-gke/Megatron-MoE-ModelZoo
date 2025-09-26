@@ -13,7 +13,7 @@ export NVTE_FWD_LAYERNORM_SM_MARGIN=20
 export NVTE_BWD_LAYERNORM_SM_MARGIN=20
 export TORCH_NCCL_AVOID_RECORD_STREAMS=0
 export NVTE_ALLOW_NONDETERMINISTIC_ALGO=1
-export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+#export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export NCCL_NVLS_ENABLE=0
 export NVTE_FUSED_ATTN=1
 export NVTE_NORM_FWD_USE_CUDNN=1
@@ -81,8 +81,8 @@ PERF_ARGS=(
     # but this doesn't really work well with our EFA setup
     # --recompute-granularity selective
     #rick
-    #--recompute-granularity selective
-    #--recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
+    --recompute-granularity selective
+    --recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
 
     # # Offload args
     # --optimizer-cpu-offload
@@ -97,7 +97,7 @@ TRAINING_ARGS=(
     # Key args
     --seq-length 4096
     --micro-batch-size 1
-    --global-batch-size 2048
+    --global-batch-size 4096
 
     # Optimizer args
     --lr-warmup-init 3.9e-7
@@ -229,8 +229,8 @@ MLA_ARGS=(
 )
 
 FP8_ARGS=(
-     --fp8-recipe mxfp8
-     --fp8-format e4m3
+     #-fp8-recipe mxfp8
+     #--fp8-format e4m3
 )
 
 NEW_1F1A_ARGS=(
