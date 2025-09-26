@@ -144,21 +144,25 @@ spec:
                 #echo "Added $LD_LIBRARY_PATH to ldconfig:"
                 #ldconfig -p | grep libcuda | sed 's/^/  /'
                 echo ""
+                
                 cd /home
                 rm -r -f Megatron-MoE-ModelZoo
                 #pip install megatron-core[lts] yq
-                git clone https://github.com/llm-on-gke/Megatron-LM/
+                git clone https://github.com/vwxyzjn/Megatron-LM/
                 cd /home/Megatron-LM
                 #git checkout costa/benchmark
                 pip install -e .
                 #pip install megatron-core@git+https://github.com/NVIDIA/Megatron-LM.git@core_r0.13.0
                 export PYTHON_PATH=$PYTHON_PATH:/home/home/Megatron-LM
-                
+                cd /home
+                git clone https://github.com/llm-on-gke/DeepEP.git ./deepep
+                cd deepep
+                pip install -e .
                 cd /home
                 git clone https://github.com/llm-on-gke/Megatron-MoE-ModelZoo.git
                 cd Megatron-MoE-ModelZoo
                 #sleep infinity
-                bash h100fast-failed.sh            
+                bash h100fast-failed.sh                 
               resources:
                 requests:
                   nvidia.com/gpu: 8
