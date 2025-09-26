@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 source /usr/local/gib/scripts/set_nccl_env.sh
-export NCCL_SOCKET_IFNAME="enp0s19,enp192s20"
+export NCCL_SOCKET_IFNAME="eth0,eth1"
 export NCCL_TUNER_CONFIG_PATH=/usr/local/gib/configs/tuner_config_a4.txtpb
 
 export TRITON_CACHE_DIR="/tmp/triton-cache/"
