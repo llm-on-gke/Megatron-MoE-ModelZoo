@@ -80,8 +80,9 @@ PERF_ARGS=(
     # Instead of the above, you can use selective recomputation
     # but this doesn't really work well with our EFA setup
     # --recompute-granularity selective
-    --recompute-granularity selective
-    --recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
+    #rick
+    #--recompute-granularity selective
+    #--recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
 
     # # Offload args
     # --optimizer-cpu-offload
@@ -96,7 +97,7 @@ TRAINING_ARGS=(
     # Key args
     --seq-length 4096
     --micro-batch-size 1
-    --global-batch-size 4096
+    --global-batch-size 2048
 
     # Optimizer args
     --lr-warmup-init 3.9e-7
@@ -116,7 +117,7 @@ TRAINING_ARGS=(
 
     # Training args
     --sequence-parallel
-    #--use-flash-attn
+    --use-flash-attn
     --no-save-optim
     --no-check-for-nan-in-loss-and-grad
     --cross-entropy-loss-fusion
@@ -228,8 +229,8 @@ MLA_ARGS=(
 )
 
 FP8_ARGS=(
-    # --fp8-recipe mxfp8
-    # --fp8-format e4m3
+     --fp8-recipe mxfp8
+     --fp8-format e4m3
 )
 
 NEW_1F1A_ARGS=(
