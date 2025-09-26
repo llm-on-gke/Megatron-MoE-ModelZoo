@@ -157,8 +157,8 @@ CHECKPOINTING_ARGS=(
 )
 
 LOGGING_ARGS=(
-    --log-memory-to-tensorboard
-    --log-validation-ppl-to-tensorboard
+    #--log-memory-to-tensorboard
+    #--log-validation-ppl-to-tensorboard
     --log-throughput
     --log-interval 1
     --logging-level 40
