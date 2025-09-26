@@ -76,8 +76,8 @@ PERF_ARGS=(
     # # Instead of the above, you can use selective recomputation
     # # but this doesn't really work well with our EFA setup
     # # --recompute-granularity selective
-    --recompute-granularity selective
-    --recompute-modules mla_up_proj moe mlp layernorm
+    #--recompute-granularity selective
+    #--recompute-modules mla_up_proj moe mlp layernorm
 
     # # Offload args
     # --optimizer-cpu-offload
@@ -195,7 +195,6 @@ MOE_ARGS=(
     --moe-token-dispatcher-type flex
     --moe-enable-deepep
     --moe-router-pre-softmax
-    --moe-grouped-gemm
     --moe-aux-loss-coeff 1e-4
     --moe-router-group-topk 4
     --moe-router-num-groups 8
