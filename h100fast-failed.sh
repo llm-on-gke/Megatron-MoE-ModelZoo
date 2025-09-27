@@ -69,12 +69,9 @@ PERF_ARGS=(
     --expert-tensor-parallel-size 1
 
     # layout
-    #B200 best practice
-    #PR=mxfp8 A2A_OVERLAP=1 TP=1 PP=8 EP=32 NNODES=32 GBS=2048 bash sbatch_benchmarking.sh --recompute-granularity selective --recompute-modules mla_up_proj mlp --pipeline-model-parallel-layout "Et*3|(tt|)*29|mL"
-
     # `"Et*2|(tt|)*22t|(tt|)*7mL"` would include the `mtp` loss; the checkpoint we converted did not include the `mtp` loss
     # --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7L"
-    --pipeline-model-parallel-layout "Et*3|(tt|)*29|mL"
+    --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL"
 
     # # Recompute args (activation checkpointing)
     # --recompute-granularity full
@@ -83,9 +80,8 @@ PERF_ARGS=(
     # Instead of the above, you can use selective recomputation
     # but this doesn't really work well with our EFA setup
     # --recompute-granularity selective
-    #rick
-    #--recompute-granularity selective
-    #--recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
+    --recompute-granularity selective
+    --recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
 
     # # Offload args
     # --optimizer-cpu-offload
@@ -100,7 +96,7 @@ TRAINING_ARGS=(
     # Key args
     --seq-length 4096
     --micro-batch-size 1
-    --global-batch-size 2048
+    --global-batch-size 4096
 
     # Optimizer args
     --lr-warmup-init 3.9e-7
@@ -119,7 +115,7 @@ TRAINING_ARGS=(
     --exp-avg-sq-dtype bf16
 
     # Training args
-    #--sequence-parallel
+    --sequence-parallel
     --use-flash-attn
     --no-save-optim
     --no-check-for-nan-in-loss-and-grad
@@ -232,8 +228,8 @@ MLA_ARGS=(
 )
 
 FP8_ARGS=(
-     #-fp8-recipe mxfp8
-     #--fp8-format e4m3
+    # --fp8-recipe mxfp8
+    # --fp8-format e4m3
 )
 
 NEW_1F1A_ARGS=(
