@@ -13,7 +13,7 @@ export NVTE_FWD_LAYERNORM_SM_MARGIN=20
 export NVTE_BWD_LAYERNORM_SM_MARGIN=20
 export TORCH_NCCL_AVOID_RECORD_STREAMS=0
 export NVTE_ALLOW_NONDETERMINISTIC_ALGO=1
-#export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export NCCL_NVLS_ENABLE=0
 export NVTE_FUSED_ATTN=1
 export NVTE_NORM_FWD_USE_CUDNN=1
@@ -69,6 +69,8 @@ PERF_ARGS=(
     --expert-tensor-parallel-size 1
 
     # layout
+    #PR=mxfp8 A2A_OVERLAP=1 TP=1 PP=8 EP=32 NNODES=32 GBS=2048 bash sbatch_benchmarking.sh --recompute-granularity selective --recompute-modules mla_up_proj mlp --pipeline-model-parallel-layout "Et*3|(tt|)*29m|L"
+
     # `"Et*2|(tt|)*22t|(tt|)*7mL"` would include the `mtp` loss; the checkpoint we converted did not include the `mtp` loss
     # --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7L"
     --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL"
@@ -80,8 +82,8 @@ PERF_ARGS=(
     # Instead of the above, you can use selective recomputation
     # but this doesn't really work well with our EFA setup
     # --recompute-granularity selective
-    --recompute-granularity selective
-    --recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
+    #--recompute-granularity selective
+    #--recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
 
     # # Offload args
     # --optimizer-cpu-offload
