@@ -98,7 +98,7 @@ TRAINING_ARGS=(
     # Key args
     --seq-length 4096
     --micro-batch-size 1
-    --global-batch-size 2048
+    --global-batch-size 1024
 
     # Optimizer args
     --lr-warmup-init 3.9e-7
@@ -206,8 +206,8 @@ MOE_ARGS=(
     --moe-router-bias-update-rate 1e-3
     --moe-router-dtype fp32
     --moe-permute-fusion
-    # --moe-router-fusion
-    # --moe-router-padding-for-fp8
+    #--moe-router-fusion
+    #--moe-router-padding-for-fp8
 
     # --moe-token-dispatcher-type alltoall
     # The following are not compatible with our EFA setup
@@ -230,8 +230,8 @@ MLA_ARGS=(
 )
 
 FP8_ARGS=(
-    # --fp8-recipe mxfp8
-    # --fp8-format e4m3
+     --fp8-recipe mxfp8
+     --fp8-format e4m3
 )
 
 NEW_1F1A_ARGS=(
