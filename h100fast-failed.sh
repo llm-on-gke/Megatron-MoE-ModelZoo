@@ -230,8 +230,8 @@ MLA_ARGS=(
 )
 
 FP8_ARGS=(
-     --fp8-recipe mxfp8
-     --fp8-format e4m3
+     #--fp8-recipe mxfp8
+     #--fp8-format e4m3
 )
 
 NEW_1F1A_ARGS=(
