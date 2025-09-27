@@ -98,7 +98,7 @@ TRAINING_ARGS=(
     # Key args
     --seq-length 4096
     --micro-batch-size 1
-    --global-batch-size 4096
+    --global-batch-size 2048
 
     # Optimizer args
     --lr-warmup-init 3.9e-7
