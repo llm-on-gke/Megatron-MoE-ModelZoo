@@ -84,8 +84,8 @@ PERF_ARGS=(
     # but this doesn't really work well with our EFA setup
     # --recompute-granularity selective
     #rick
-    --recompute-granularity selective
-    --recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
+    #--recompute-granularity selective
+    #--recompute-modules mla_up_proj moe mlp layernorm moe_act core_attn
 
     # # Offload args
     # --optimizer-cpu-offload
