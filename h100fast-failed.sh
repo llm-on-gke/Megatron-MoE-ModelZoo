@@ -69,9 +69,12 @@ PERF_ARGS=(
     --expert-tensor-parallel-size 1
 
     # layout
+    #B200 best practice
+    #PR=mxfp8 A2A_OVERLAP=1 TP=1 PP=8 EP=32 NNODES=32 GBS=2048 bash sbatch_benchmarking.sh --recompute-granularity selective --recompute-modules mla_up_proj mlp --pipeline-model-parallel-layout "Et*3|(tt|)*29|mL"
+
     # `"Et*2|(tt|)*22t|(tt|)*7mL"` would include the `mtp` loss; the checkpoint we converted did not include the `mtp` loss
     # --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7L"
-    --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL"
+    --pipeline-model-parallel-layout "Et*3|(tt|)*29|mL"
 
     # # Recompute args (activation checkpointing)
     # --recompute-granularity full
@@ -97,7 +100,7 @@ TRAINING_ARGS=(
     # Key args
     --seq-length 4096
     --micro-batch-size 1
-    --global-batch-size 4096
+    --global-batch-size 2048
 
     # Optimizer args
     --lr-warmup-init 3.9e-7
@@ -116,7 +119,7 @@ TRAINING_ARGS=(
     --exp-avg-sq-dtype bf16
 
     # Training args
-    --sequence-parallel
+    #--sequence-parallel
     --use-flash-attn
     --no-save-optim
     --no-check-for-nan-in-loss-and-grad
