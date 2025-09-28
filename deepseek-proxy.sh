@@ -124,7 +124,7 @@ MODEL_ARGS=(
   --adam-beta2 0.95
 
   # Add MoE args
-  --num-experts 61 # local 4 + 1 shared, EP16
+  --num-experts 256 # local 4 + 1 shared, EP16
   --moe-layer-freq "([0]*3+[1]*58)"  #"([0]*3+[1]*11)" should equal number of layers
 
   --moe-ffn-hidden-size 2048
