@@ -124,7 +124,7 @@ MODEL_ARGS=(
 
   # Add MoE args
   --num-experts: 64 # local 4 + 1 shared, EP16
-  --moe-layer-freq: ([0]*3+[1]*11)
+  --moe-layer-freq: "([0]*3+[1]*11)"
   --moe-ffn-hidden-size: 2048
   --moe-shared-expert-intermediate-size: 2048
   --moe-router-load-balancing-type: seq_aux_loss
