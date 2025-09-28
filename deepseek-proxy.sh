@@ -67,7 +67,7 @@ MODEL_ARGS=(
   --global-batch-size ${GBS}
   --train-samples 585937500
   --exit-duration-in-mins 220
-  --no-save-optim false # set to False to save optim state. TODO(lit): check the ckpt size.
+#  --no-save-optim false # set to False to save optim state. TODO(lit): check the ckpt size.
   --no-check-for-nan-in-loss-and-grad
   --cross-entropy-loss-fusion
   --cross-entropy-fusion-impl native #te
@@ -134,7 +134,7 @@ MODEL_ARGS=(
   --moe-token-dispatcher-type flex
   --moe-enable-deepep
   --moe-router-pre-softmax
-  --moe-grouped-gemm
+  #--moe-grouped-gemm
   --moe-aux-loss-coeff 1e-4
   --moe-router-group-topk 4
   --moe-router-num-groups 8
@@ -163,7 +163,7 @@ MODEL_ARGS=(
   --eval-interval 200
 
   # Add checkpointing args
-  --finetune false
+#  --finetune false
   --no-load-optim
   --no-load-rng
   --auto-detect-ckpt-format
@@ -178,8 +178,8 @@ MODEL_ARGS=(
   # Add logging args
   #--log-timers-to-tensorboard: true
   #--log-memory-to-tensorboard: true
-  --log-num-zeros-in-grad false
-  --log-params-norm false
+#  --log-num-zeros-in-grad false
+#  --log-params-norm false
   --log-validation-ppl-to-tensorboard
   --log-throughput
   --log-interval 1
@@ -194,6 +194,7 @@ MODEL_ARGS=(
   # enable experimental
   --enable-experimental
 )
+
 
 torchrun \
     ${DISTRIBUTED_ARGS[@]} /home/Megatron-LM/pretrain_gpt.py  \
