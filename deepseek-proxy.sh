@@ -50,149 +50,149 @@ TOKENIZER_ARGS=(
 
 MODEL_ARGS=(
   # Distributed args
-  --distributed-timeout-minutes: 60
-  --tensor-model-parallel-size: ${TP}
-  --pipeline-model-parallel-size: ${PP}
-  --expert-model-parallel-size: ${EP}
-  --context-parallel-size: ${CP}
-  --expert-tensor-parallel-size: 1
-  --use-distributed-optimizer: true
+  --distributed-timeout-minutes 60
+  --tensor-model-parallel-size ${TP}
+  --pipeline-model-parallel-size ${PP}
+  --expert-model-parallel-size ${EP}
+  --context-parallel-size ${CP}
+  --expert-tensor-parallel-size 1
+  --use-distributed-optimizer
 
   # Training args
-  --use-mcore-models: true
-  --sequence-parallel: true
-  --use-flash-attn: true
-  --disable-bias-linear: true
-  --micro-batch-size: ${MBS}
-  --global-batch-size: ${GBS}
-  --train-samples: 585937500
-  --exit-duration-in-mins: 220
-  --no-save-optim: false # set to False to save optim state. TODO(lit): check the ckpt size.
-  --no-check-for-nan-in-loss-and-grad: true
-  --cross-entropy-loss-fusion: true
-  --cross-entropy-fusion-impl: native #te
-  --manual-gc: true
-  --manual-gc-interval: 10
+  --use-mcore-models
+  --sequence-parallel
+  --use-flash-attn
+  --disable-bias-linear
+  --micro-batch-size ${MBS}
+  --global-batch-size ${GBS}
+  --train-samples 585937500
+  --exit-duration-in-mins 220
+  --no-save-optim false # set to False to save optim state. TODO(lit): check the ckpt size.
+  --no-check-for-nan-in-loss-and-grad
+  --cross-entropy-loss-fusion
+  --cross-entropy-fusion-impl native #te
+  --manual-gc
+  --manual-gc-interval 10
 
   # Transformer Engine args
-  --transformer-impl: transformer_engine
+  --transformer-impl transformer_engine
 
   # Data args
-  --seq-length: ${SEQ_LEN}
-  --data-cache-path: ${WORKSPACE}/data_cache
-  --tokenizer-type: HuggingFaceTokenizer
-  --tokenizer-model: deepseek-ai/DeepSeek-V3
+  --seq-length ${SEQ_LEN}
+  --data-cache-path ${WORKSPACE}/data_cache
+  --tokenizer-type HuggingFaceTokenizer
+  --tokenizer-model deepseek-ai/DeepSeek-V3
   #--data-path: ${DATA_PATH}
   --mock-data
-  --split: 99,1,0
-  --no-mmap-bin-files: true
-  --no-create-attention-mask-in-dataloader: true
-  --num-workers: 6
+  --split 99,1,0
+  --no-mmap-bin-files
+  --no-create-attention-mask-in-dataloader
+  --num-workers 6
 
   # Add network size args
-  --num-layers: 14 # original 61 layers
-  --hidden-size: 7168
-  --ffn-hidden-size: 18432
-  --num-attention-heads: 128
-  --kv-channels: 128
-  --max-position-embeddings: 4096
-  --position-embedding-type: rope
-  --rotary-base: 10000
-  --make-vocab-size-divisible-by: 3232
-  --normalization: RMSNorm
-  --norm-epsilon: 1e-6
-  --swiglu: true
-  --untie-embeddings-and-output-weights: true
-  --multi-latent-attention: true
+  --num-layers 14 # original 61 layers
+  --hidden-size 7168
+  --ffn-hidden-size 18432
+  --num-attention-heads 128
+  --kv-channels 128
+  --max-position-embeddings 4096
+  --position-embedding-type rope
+  --rotary-base 10000
+  --make-vocab-size-divisible-by 3232
+  --normalization RMSNorm
+  --norm-epsilon 1e-6
+  --swiglu
+  --untie-embeddings-and-output-weights
+  --multi-latent-attention
 
   # Add regularization args
-  --attention-dropout: 0.0
-  --hidden-dropout: 0.0
-  --clip-grad: 1.0
-  --weight-decay: 0.1
-  --qk-layernorm: true
+  --attention-dropout 0.0
+  --hidden-dropout 0.0
+  --clip-grad 1.0
+  --weight-decay 0.1
+  --qk-layernorm
 
   # Add learning rate args
-  --lr-decay-samples: 584765624
-  --lr-warmup-samples: 1536000
+  --lr-decay-samples 584765624
+  --lr-warmup-samples 1536000
   # Learning rate scaled down from 7.3e-6 (DeepSeek-V3 technical report, GBS=15360) to 3.9e-6 (GBS=8192)
-  --lr-warmup-init: 3.9e-7
-  --lr: 3.9e-6
-  --min-lr: 3.9e-7
-  --lr-decay-style: cosine
-  --adam-beta1: 0.9
-  --adam-beta2: 0.95
+  --lr-warmup-init 3.9e-7
+  --lr 3.9e-6
+  --min-lr 3.9e-7
+  --lr-decay-style cosine
+  --adam-beta1 0.9
+  --adam-beta2 0.95
 
   # Add MoE args
-  --num-experts: 64 # local 4 + 1 shared, EP16
-  --moe-layer-freq: "([0]*3+[1]*11)"
-  --moe-ffn-hidden-size: 2048
-  --moe-shared-expert-intermediate-size: 2048
-  --moe-router-load-balancing-type: seq_aux_loss
-  --moe-router-topk: 8
+  --num-experts 64 # local 4 + 1 shared, EP16
+  --moe-layer-freq "([0]*3+[1]*11)"
+  --moe-ffn-hidden-size 2048
+  --moe-shared-expert-intermediate-size 2048
+  --moe-router-load-balancing-type seq_aux_loss
+  --moe-router-topk 8
   # --moe-token-dispatcher-type: alltoall
-  --moe-token-dispatcher-type: flex
-  --moe-enable-deepep: true
-  --moe-router-pre-softmax: true
-  --moe-grouped-gemm: true
-  --moe-aux-loss-coeff: 1e-4
-  --moe-router-group-topk: 4
-  --moe-router-num-groups: 8
-  --moe-router-topk-scaling-factor: 2.5
-  --moe-router-score-function: sigmoid
-  --moe-router-enable-expert-bias: true
-  --moe-router-bias-update-rate: 1e-3
-  --moe-router-dtype: fp32
-  --moe-permute-fusion: true
+  --moe-token-dispatcher-type flex
+  --moe-enable-deepep
+  --moe-router-pre-softmax
+  --moe-grouped-gemm
+  --moe-aux-loss-coeff 1e-4
+  --moe-router-group-topk 4
+  --moe-router-num-groups 8
+  --moe-router-topk-scaling-factor 2.5
+  --moe-router-score-function sigmoid
+  --moe-router-enable-expert-bias
+  --moe-router-bias-update-rate 1e-3
+  --moe-router-dtype fp32
+  --moe-permute-fusion
 
   # Add MLA args
-  --q-lora-rank: 1536
-  --kv-lora-rank: 512
-  --qk-head-dim: 128
-  --qk-pos-emb-head-dim: 64
-  --v-head-dim: 128
-  --rotary-scaling-factor: 40
-  --mscale: 1.0
-  --mscale-all-dim: 1.0
+  --q-lora-rank 1536
+  --kv-lora-rank 512
+  --qk-head-dim 128
+  --qk-pos-emb-head-dim 64
+  --v-head-dim 128
+  --rotary-scaling-factor 40
+  --mscale 1.0
+  --mscale-all-dim 1.0
 
-  --mtp-num-layers: 1
-  --mtp-loss-scaling-factor: 0.1
+  --mtp-num-layers 1
+  --mtp-loss-scaling-factor 0.1
 
   # Add validation args
-  --eval-iters: 32
-  --eval-interval: 200
+  --eval-iters 32
+  --eval-interval 200
 
   # Add checkpointing args
-  --finetune: false
-  --no-load-optim: true
-  --no-load-rng: true
-  --auto-detect-ckpt-format: true
-  --load: ${OUTPUT_PATH}
-  --save: ${OUTPUT_PATH}/checkpoints
-  --save-interval: 500
-  --dist-ckpt-strictness: log_all
+  --finetune false
+  --no-load-optim
+  --no-load-rng
+  --auto-detect-ckpt-format
+  --load ${OUTPUT_PATH}
+  --save ${OUTPUT_PATH}/checkpoints
+  --save-interval 500
+  --dist-ckpt-strictness log_all
 
   # Add initialization args
-  --init-method-std: 0.02
+  --init-method-std 0.02
 
   # Add logging args
   #--log-timers-to-tensorboard: true
   #--log-memory-to-tensorboard: true
-  --log-num-zeros-in-grad: false
-  --log-params-norm: false
-  --log-validation-ppl-to-tensorboard: true
-  --log-throughput: true
-  --log-interval: 1
-  --logging-level: 40
-  --tensorboard-dir: ${OUTPUT_PATH}/tensorboard
+  --log-num-zeros-in-grad false
+  --log-params-norm false
+  --log-validation-ppl-to-tensorboard
+  --log-throughput
+  --log-interval 1
+  --logging-level 40
+  --tensorboard-dir ${OUTPUT_PATH}/tensorboard
   #--wandb-project: ${WANDB_PROJECT}
   #--wandb-exp-name: DeepSeek-V3-Proxy-TP${TP}PP${PP}EP${EP}CP${CP}VPP${VPP}-MBS${MBS}GBS${GBS}-${COMMENT}
 
   # Add mixed precision args
-  --bf16: true
+  --bf16
 
   # enable experimental
-  --enable-experimental: true
+  --enable-experimental
 )
 
 torchrun \
