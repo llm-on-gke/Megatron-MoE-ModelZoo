@@ -27,7 +27,7 @@ PP=8
 EP=32
 CP=1
 MBS=1
-GBS=1024
+GBS=2048
 SEQ_LEN=4096
 OUTPUT_PATH="/home/Megatron-MoE-ModelZoo/output/"
 WORKSPACE="/home/Megatron-MoE-ModelZoo"
@@ -57,7 +57,7 @@ MODEL_ARGS=(
   --context-parallel-size ${CP}
   --expert-tensor-parallel-size 1
   --use-distributed-optimizer
-
+  --pipeline-model-parallel-layout "Et*2|(tt|)*22t|(tt|)*7mL"
   # Training args
   --use-mcore-models
   --sequence-parallel
@@ -90,7 +90,7 @@ MODEL_ARGS=(
   --num-workers 6
 
   # Add network size args
-  --num-layers 8 # original 61 layers, proxy 14
+  --num-layers 61 # original 61 layers, proxy 14
   --hidden-size 7168
   --ffn-hidden-size 18432
   --num-attention-heads 128
@@ -124,8 +124,9 @@ MODEL_ARGS=(
   --adam-beta2 0.95
 
   # Add MoE args
-  --num-experts 64 # local 4 + 1 shared, EP16
-  --moe-layer-freq "([0]*3+[1]*5)"  #"([0]*3+[1]*11)"
+  --num-experts 61 # local 4 + 1 shared, EP16
+  --moe-layer-freq "([0]*3+[1]*58)"  #"([0]*3+[1]*11)" should equal number of layers
+
   --moe-ffn-hidden-size 2048
   --moe-shared-expert-intermediate-size 2048
   --moe-router-load-balancing-type seq_aux_loss
