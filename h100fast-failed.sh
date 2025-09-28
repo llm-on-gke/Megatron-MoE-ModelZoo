@@ -13,7 +13,7 @@ export NVTE_FWD_LAYERNORM_SM_MARGIN=20
 export NVTE_BWD_LAYERNORM_SM_MARGIN=20
 export TORCH_NCCL_AVOID_RECORD_STREAMS=0
 export NVTE_ALLOW_NONDETERMINISTIC_ALGO=1
-export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+#export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 export NCCL_NVLS_ENABLE=0
 export NVTE_FUSED_ATTN=1
 export NVTE_NORM_FWD_USE_CUDNN=1
@@ -239,7 +239,7 @@ NEW_1F1A_ARGS=(
     # --overlap-moe-expert-parallel-comm
 )
 
-torchrun \
+NVSHMEM_DEBUG=INFO OMP_NUM_THREADS=12 TORCH_NCCL_ENABLE_MONITORING=0 torchrun \
     ${DISTRIBUTED_ARGS[@]} /home/Megatron-LM/pretrain_gpt.py  \
     ${DATA_ARGS[@]} \
     ${TOKENIZER_ARGS[@]} \
