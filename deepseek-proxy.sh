@@ -167,7 +167,7 @@ MODEL_ARGS=(
   --no-load-optim: true
   --no-load-rng: true
   --auto-detect-ckpt-format: true
-  --load: ${LOAD_PATH}
+  --load: ${OUTPUT_PATH}
   --save: ${OUTPUT_PATH}/checkpoints
   --save-interval: 500
   --dist-ckpt-strictness: log_all
