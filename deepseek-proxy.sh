@@ -90,7 +90,7 @@ MODEL_ARGS=(
   --num-workers 6
 
   # Add network size args
-  --num-layers 14 # original 61 layers
+  --num-layers 8 # original 61 layers
   --hidden-size 7168
   --ffn-hidden-size 18432
   --num-attention-heads 128
