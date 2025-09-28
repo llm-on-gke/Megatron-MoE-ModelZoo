@@ -43,8 +43,8 @@ DISTRIBUTED_ARGS=(
 )
 
 TOKENIZER_ARGS=(
-    --tokenizer-type HuggingFaceTokenizer
-    --tokenizer-model deepseek-ai/DeepSeek-V3
+    #--tokenizer-type HuggingFaceTokenizer
+    #--tokenizer-model deepseek-ai/DeepSeek-V3
     --make-vocab-size-divisible-by 3232
 )
 
@@ -82,7 +82,8 @@ MODEL_ARGS=(
   --data-cache-path: ${WORKSPACE}/data_cache
   --tokenizer-type: HuggingFaceTokenizer
   --tokenizer-model: deepseek-ai/DeepSeek-V3
-  --data-path: ${DATA_PATH}
+  #--data-path: ${DATA_PATH}
+  --mock-data
   --split: 99,1,0
   --no-mmap-bin-files: true
   --no-create-attention-mask-in-dataloader: true
@@ -175,8 +176,8 @@ MODEL_ARGS=(
   --init-method-std: 0.02
 
   # Add logging args
-  --log-timers-to-tensorboard: true
-  --log-memory-to-tensorboard: true
+  #--log-timers-to-tensorboard: true
+  #--log-memory-to-tensorboard: true
   --log-num-zeros-in-grad: false
   --log-params-norm: false
   --log-validation-ppl-to-tensorboard: true
@@ -184,8 +185,8 @@ MODEL_ARGS=(
   --log-interval: 1
   --logging-level: 40
   --tensorboard-dir: ${OUTPUT_PATH}/tensorboard
-  --wandb-project: ${WANDB_PROJECT}
-  --wandb-exp-name: DeepSeek-V3-Proxy-TP${TP}PP${PP}EP${EP}CP${CP}VPP${VPP}-MBS${MBS}GBS${GBS}-${COMMENT}
+  #--wandb-project: ${WANDB_PROJECT}
+  #--wandb-exp-name: DeepSeek-V3-Proxy-TP${TP}PP${PP}EP${EP}CP${CP}VPP${VPP}-MBS${MBS}GBS${GBS}-${COMMENT}
 
   # Add mixed precision args
   --bf16: true
