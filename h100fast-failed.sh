@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
-
+LD_LIBRARY_PATH=${NVSHMEM_DIR}lib:/usr/local/nvidia/lib64:$LD_LIBRARY_PATH
+ldconfig $LD_LIBRARY_PATH
 source /usr/local/gib/scripts/set_nccl_env.sh
 export NCCL_SOCKET_IFNAME="eth0,eth1"
 export NCCL_TUNER_CONFIG_PATH=/usr/local/gib/configs/tuner_config_a4.txtpb

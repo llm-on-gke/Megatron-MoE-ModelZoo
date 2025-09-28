@@ -138,9 +138,7 @@ spec:
               - -xc
               - |            
                 set -e        
-                LD_LIBRARY_PATH=${NVSHMEM_DIR}lib:/usr/local/nvidia/lib64:$LD_LIBRARY_PATH
                 
-                ldconfig $LD_LIBRARY_PATH
                 #echo "Added $LD_LIBRARY_PATH to ldconfig:"
                 #ldconfig -p | grep libcuda | sed 's/^/  /'
                 echo ""
