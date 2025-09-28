@@ -239,7 +239,7 @@ NEW_1F1A_ARGS=(
     # --overlap-moe-expert-parallel-comm
 )
 
-NVSHMEM_DEBUG=INFO OMP_NUM_THREADS=12 TORCH_NCCL_ENABLE_MONITORING=0 torchrun \
+NVSHMEM_DEBUG=INFO NCCL_DEBUG=INFO OMP_NUM_THREADS=12 TORCH_NCCL_ENABLE_MONITORING=0 torchrun \
     ${DISTRIBUTED_ARGS[@]} /home/Megatron-LM/pretrain_gpt.py  \
     ${DATA_ARGS[@]} \
     ${TOKENIZER_ARGS[@]} \
