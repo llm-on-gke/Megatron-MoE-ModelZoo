@@ -90,7 +90,7 @@ MODEL_ARGS=(
   --num-workers 6
 
   # Add network size args
-  --num-layers 8 # original 61 layers
+  --num-layers 8 # original 61 layers, proxy 14
   --hidden-size 7168
   --ffn-hidden-size 18432
   --num-attention-heads 128
@@ -125,7 +125,7 @@ MODEL_ARGS=(
 
   # Add MoE args
   --num-experts 64 # local 4 + 1 shared, EP16
-  --moe-layer-freq "([0]*3+[1]*11)"
+  --moe-layer-freq "([0]*3+[1]*5)"  #"([0]*3+[1]*11)"
   --moe-ffn-hidden-size 2048
   --moe-shared-expert-intermediate-size 2048
   --moe-router-load-balancing-type seq_aux_loss
